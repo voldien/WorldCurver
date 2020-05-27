@@ -6,11 +6,11 @@ namespace WorldCurver{
 	public enum CurveSpace
 	{
 		/*	Curve using the clip space.	*/
-		ClipSpace,
+		ClipSpace = 0,
 		/*	Curve using world space.	*/
-		WorldSpace,
+		WorldSpace = 1,
 		/*	Curve using view space.	*/
-		ViewSpace,
+		ViewSpace = 2,
 	}
 
 	public interface ICurve {

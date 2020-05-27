@@ -30,6 +30,7 @@ namespace WorldCurver{
 		private int m_CurveFadeDistID;
 		[NonSerialized]
 		private int m_CurvedDirectionID;
+		private int m_CurveModeID;
 
 		private void OnEnable()
 		{
@@ -37,7 +38,12 @@ namespace WorldCurver{
 			m_CurveHorizonID = Shader.PropertyToID("_Horizon");
 			m_CurveFadeDistID = Shader.PropertyToID("_FadeDist");
 			m_CurvedDirectionID = Shader.PropertyToID("_Direction");
+			m_CurveModeID = Shader.PropertyToID("_CurveMode");
 			updateAllGlobal();
+		}
+
+		private void onDisable(){
+			
 		}
 		public void setStrength(float strength)
 		{
@@ -108,6 +114,7 @@ namespace WorldCurver{
 			Shader.SetGlobalFloat(m_CurveHorizonID, curveHorizon);
 			Shader.SetGlobalFloat(m_CurveFadeDistID, curveFadeDist);
 			Shader.SetGlobalVector(m_CurvedDirectionID, direction);
+			Shader.SetGlobalInt(m_CurveModeID, (int)curveSpace);
 			Shader.EnableKeyword(getSpaceKeyWord(this.curveSpace));
 		}
 
