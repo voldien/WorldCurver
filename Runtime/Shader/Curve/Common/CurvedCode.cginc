@@ -48,6 +48,11 @@ fixed4 frag(v2f i) : SV_Target
 
 	/*	*/
 	fixed4 col = tex2D(_MainTex, i.uv) * i.color * UNITY_ACCESS_INSTANCED_PROP(Props, _Color);
+
+	/*	Support for alpha cutout.	*/
+	#ifdef WORLD_CURVE_ALPHA_CLIP
+	clip(col.a - _Cutout);
+	#endif
 	/*	*/
 	UNITY_APPLY_FOG(i.fogCoord, col);
 	return col;
