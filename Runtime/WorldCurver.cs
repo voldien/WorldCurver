@@ -42,9 +42,14 @@ namespace WorldCurver{
 			updateAllGlobal();
 		}
 
-		private void onDisable(){
-			
+		private void OnDisable(){
+			/*	Disable and reset to non curve.	*/
+			Shader.SetGlobalFloat(m_CurveStrengthID, 0);
+			Shader.SetGlobalFloat(m_CurveHorizonID, curveHorizon);
+			Shader.SetGlobalFloat(m_CurveFadeDistID, curveFadeDist);
+			Shader.SetGlobalVector(m_CurvedDirectionID, direction);
 		}
+
 		public void setStrength(float strength)
 		{
 			this.curveStrength = strength;
@@ -95,6 +100,7 @@ namespace WorldCurver{
 		}
 		public static string getSpaceKeyWord(CurveSpace curveSpace)
 		{
+			//TODO remove.
 			switch (curveSpace)
 			{
 				case CurveSpace.ClipSpace:
