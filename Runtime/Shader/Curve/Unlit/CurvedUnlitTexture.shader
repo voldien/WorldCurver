@@ -7,7 +7,7 @@ Shader "Curve/UnlitTexture"
 	}
 	SubShader
 	{
-		Tags { "RenderType"="Opaque" "RenderType"="Transparent" "IgnoreProjector" = "True"  "DisableBatching"="False" "CanUseSpriteAtlas"="True" }
+		Tags { "RenderType"="Opaque" "IgnoreProjector" = "True"  "DisableBatching"="False" "CanUseSpriteAtlas"="True" }
 		LOD 200
 
 		Pass
@@ -16,6 +16,7 @@ Shader "Curve/UnlitTexture"
 			#pragma vertex vert
 			#pragma fragment frag
 			#pragma multi_compile_fog multi_compile_instancing noambient noforwardadd
+			#pragma instancing_options assumeuniformscaling
 				
 			#include "../Common/CurvedCode.cginc"
 

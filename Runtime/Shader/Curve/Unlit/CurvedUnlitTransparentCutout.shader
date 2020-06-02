@@ -4,14 +4,13 @@ Shader "Curve/Unlit Transparent Cutout"
 	{
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Texture", 2D) = "white" {}
-		_Cutout ("Cutout", float) = 0.5
+		_Cutout ("Cutout", Range(0, 1)) = 0.5
 		[Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend ("__src", Float) = 1.0
 		[Enum(UnityEngine.Rendering.BlendMode)] _DstBlend ("__dst", Float) = 8.0
-		//[Toggle] _ZWrite ("__zw", Float) = 1.0
 	}
 	SubShader
 	{
-		Tags { "RenderType"="Transparent" "IgnoreProjector" = "True"  "DisableBatching"="False" "CanUseSpriteAtlas"="True" }
+		Tags { "RenderType"="AlphaTest" "IgnoreProjector" = "True"  "DisableBatching"="False" "CanUseSpriteAtlas"="True" }
 		LOD 200
 
 		Pass

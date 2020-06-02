@@ -16,7 +16,8 @@ Shader "Curve/Color"
 			#pragma vertex vert
 			#pragma fragment frag
 			#pragma multi_compile_fog multi_compile_instancing noambient noforwardadd
-				
+			#pragma instancing_options assumeuniformscaling
+			
 			#include "../Common/CurvedCode.cginc"
 
 			ENDCG

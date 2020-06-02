@@ -4,6 +4,9 @@ Shader "Curve/UnlitTransparent"
 	{
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Texture", 2D) = "white" {}
+		[Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend ("__src", Float) = 1.0
+		[Enum(UnityEngine.Rendering.BlendMode)] _DstBlend ("__dst", Float) = 0.0
+		//[Toggle] _ZWrite ("__zw", Float) = 1.0
 	}
 	SubShader
 	{
@@ -12,13 +15,15 @@ Shader "Curve/UnlitTransparent"
 
 		Pass
 		{
-			Blend SrcAlpha OneMinusSrcAlpha
+			Blend [_SrcBlend] [_DstBlend]
 			ZWrite Off
+			Cull Off
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
 			#pragma multi_compile_fog multi_compile_instancing noambient noforwardadd
-
+			#pragma instancing_options assumeuniformscaling
+			
 			#include "../Common/CurvedCode.cginc"
 
 			ENDCG

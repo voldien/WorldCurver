@@ -21,6 +21,8 @@ namespace WorldCurver{
 		public bool horizon = true;
 		[SerializeField, Tooltip("Use Horizon Transition fade.")]
 		public bool fadeHorizontrue = true;
+		[SerializeField]
+		public Vector4 influence;
 		/*	Internal.	*/
 		[NonSerialized]
 		private int m_CurveStrengthID;
@@ -30,24 +32,32 @@ namespace WorldCurver{
 		private int m_CurveFadeDistID;
 		[NonSerialized]
 		private int m_CurvedDirectionID;
+		[NonSerialized]
 		private int m_CurveModeID;
+		[NonSerialized]
+		private int m_CurveInfluenceID;
+
 
 		private void OnEnable()
 		{
+			/*	Get all global variable ID.	*/
 			m_CurveStrengthID = Shader.PropertyToID("_CurveStrength");
 			m_CurveHorizonID = Shader.PropertyToID("_Horizon");
 			m_CurveFadeDistID = Shader.PropertyToID("_FadeDist");
 			m_CurvedDirectionID = Shader.PropertyToID("_Direction");
 			m_CurveModeID = Shader.PropertyToID("_CurveMode");
+			m_CurveInfluenceID = Shader.PropertyToID("_LengthInfluence");
+
+			/*	Update shaders.	*/
 			updateAllGlobal();
 		}
 
 		private void OnDisable(){
 			/*	Disable and reset to non curve.	*/
-			Shader.SetGlobalFloat(m_CurveStrengthID, 0);
-			Shader.SetGlobalFloat(m_CurveHorizonID, curveHorizon);
-			Shader.SetGlobalFloat(m_CurveFadeDistID, curveFadeDist);
-			Shader.SetGlobalVector(m_CurvedDirectionID, direction);
+			Shader.SetGlobalFloat(m_CurveStrengthID, 0.0f);
+			Shader.SetGlobalFloat(m_CurveHorizonID, 0.0f);
+			Shader.SetGlobalFloat(m_CurveFadeDistID, 0.0f);
+			Shader.SetGlobalVector(m_CurvedDirectionID, Vector4.zero);
 		}
 
 		public void setStrength(float strength)
@@ -98,21 +108,7 @@ namespace WorldCurver{
 			this.curveFadeDist = fadeHorizon;
 			updateAllGlobal();
 		}
-		public static string getSpaceKeyWord(CurveSpace curveSpace)
-		{
-			//TODO remove.
-			switch (curveSpace)
-			{
-				case CurveSpace.ClipSpace:
-					return "CURVE_CLIPSPACE";
-				case CurveSpace.WorldSpace:
-					return "CURVE_WORLDSPACE";
-				case CurveSpace.ViewSpace:
-					return "CURVE_VIEWSPACE";
-				default:
-					throw new ArgumentException("Invalid Curve space.");
-			}
-		}
+
 
 		private void updateAllGlobal()
 		{
@@ -120,14 +116,30 @@ namespace WorldCurver{
 			Shader.SetGlobalFloat(m_CurveHorizonID, curveHorizon);
 			Shader.SetGlobalFloat(m_CurveFadeDistID, curveFadeDist);
 			Shader.SetGlobalVector(m_CurvedDirectionID, direction);
+			Shader.SetGlobalVector(m_CurveInfluenceID, influence);
 			Shader.SetGlobalInt(m_CurveModeID, (int)curveSpace);
-			Shader.EnableKeyword(getSpaceKeyWord(this.curveSpace));
 		}
 
+
+# if UNITY_EDITOR
 		private void Update()
 		{
-			//TODO remove to event based.
 			updateAllGlobal();
 		}
+
+		void OnValidate()
+		{
+			this.influence.x = Mathf.Clamp(this.influence.x, 0, 1);
+			this.influence.y = Mathf.Clamp(this.influence.y, 0, 1);
+			this.influence.z = Mathf.Clamp(this.influence.z, 0, 1);
+			this.influence.w = Mathf.Clamp(this.influence.w, 0, 1);
+
+
+			this.direction.x = Mathf.Max(this.direction.x, 0);
+			this.direction.y = Mathf.Max(this.direction.y, 0);
+			this.direction.z = Mathf.Max(this.direction.z, 0);
+			this.direction.w = Mathf.Max(this.direction.w, 0);
+		}
+#endif
 	}
 }

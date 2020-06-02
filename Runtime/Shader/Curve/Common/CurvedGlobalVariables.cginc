@@ -10,6 +10,7 @@
 #define CURVE_FADE 		1
 #define CURVE_HORIZON 	2
 
+CBUFFER_START(WorldCurve)
 /*	*/
 int _CurveMode;
 /*	*/
@@ -22,5 +23,9 @@ float _Horizon;
 float _FadeDist;
 /*	*/
 float4 _Direction;
+
+half4 _LengthInfluence;	/*	Allow for certain axis to be compute differently.	*/
+
+CBUFFER_END
 
 #endif
