@@ -2,6 +2,7 @@
 #include "CurvedFunctions.cginc"
 #include "CurvedGlobalVariables.cginc"
 
+
 //TODO rename
 UNITY_INSTANCING_BUFFER_START(Props)
 UNITY_DEFINE_INSTANCED_PROP(fixed4, _Color)
@@ -24,10 +25,12 @@ struct v2f
 	UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
+// TODO relocate to their respective shader.
 sampler2D _MainTex;
 float4 _MainTex_ST;
 
 
+//TODO rename to unlit 
 v2f vert(appdata v)
 {
 	v2f o;
