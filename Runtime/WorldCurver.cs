@@ -2,6 +2,10 @@
 using System;
 
 namespace WorldCurver{
+	public enum DistanceMethod {
+		Distance,
+		Plane
+	}
 
 	[ExecuteInEditMode, AddComponentMenu("Curve/WorldCurver", 0)]
 	public class WorldCurver : MonoBehaviour, ICurve
@@ -23,6 +27,8 @@ namespace WorldCurver{
 		public bool fadeHorizontrue = true;
 		[SerializeField]
 		public Vector4 influence;
+		[SerializeField]
+		public DistanceMethod distanceMethod;
 		/*	Internal.	*/
 		[NonSerialized]
 		private int m_CurveStrengthID;
@@ -50,6 +56,8 @@ namespace WorldCurver{
 
 			/*	Update shaders.	*/
 			updateAllGlobal();
+
+			Shader.EnableKeyword("CURVED_ON");
 		}
 
 		private void OnDisable(){
@@ -58,6 +66,9 @@ namespace WorldCurver{
 			Shader.SetGlobalFloat(m_CurveHorizonID, 0.0f);
 			Shader.SetGlobalFloat(m_CurveFadeDistID, 0.0f);
 			Shader.SetGlobalVector(m_CurvedDirectionID, Vector4.zero);
+
+			/*	Disable Curving.	*/
+			Shader.DisableKeyword("CURVED_ON");
 		}
 
 		public void setStrength(float strength)
@@ -108,8 +119,7 @@ namespace WorldCurver{
 			this.curveFadeDist = fadeHorizon;
 			updateAllGlobal();
 		}
-
-
+		
 		private void updateAllGlobal()
 		{
 			Shader.SetGlobalFloat(m_CurveStrengthID, curveStrength * 0.001f);

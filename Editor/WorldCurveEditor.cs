@@ -17,6 +17,13 @@ namespace WorldCurver
 		private SerializedProperty fadeHorizontrue;
 		private SerializedProperty influence;
 
+		private GUIContent m_style_CurveSpace;
+		private GUIContent m_style_CurveStrength;
+		private GUIContent m_style_CurveDirection;
+		private GUIContent m_style_CurveInfluence;
+		private GUIContent m_style_Curvehorizon;
+		private GUIContent m_style_CurveFadehorizon;
+
 		private void OnEnable()
 		{
 			fetchSerializeProperty();
