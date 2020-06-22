@@ -1,6 +1,9 @@
 #ifndef _GLOBAL_AXIS_CURVE_VARIABLES_
 #define _GLOBAL_AXIS_CURVE_VARIABLES_ 1
 
+#pragma multi_compile CURVED_ON CURVED_OFF
+//#pragma multi_compile _ CURVED_ON
+
 /*	Curve mode.	*/
 #define CURVE_CLIP_SPACE 0
 #define CURVE_WORLD_SPACE 1
