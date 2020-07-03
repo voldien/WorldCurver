@@ -20,7 +20,6 @@ Shader "Curve/Mobile/Diffuse"
 			Tags
 			{
 				"LightMode" = "ForwardBase"
-				//"LightMode" = "ForwardAdd"
 				"PassFlags" = "OnlyDirectional"
 			}
 			CGPROGRAM
@@ -67,18 +66,12 @@ Shader "Curve/Mobile/Diffuse"
 			#pragma multi_compile ___ UNITY_HDR_ON
 			#pragma target 2.0
 
+			/*	*/
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
 			float4 _AmbientColor;
 			
 			#include "../Common/CurvedMobileCode.cginc"
-
-		// 			i.vertexLightColor = Shade4PointLights(
-		// 	unity_4LightPosX0, unity_4LightPosY0, unity_4LightPosZ0,
-		// 	unity_LightColor[0].rgb, unity_LightColor[1].rgb,
-		// 	unity_LightColor[2].rgb, unity_LightColor[3].rgb,
-		// 	unity_4LightAtten0, i.worldPos, i.normal
-		// );
 
 			ENDCG
 		}

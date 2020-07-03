@@ -13,18 +13,4 @@ float getRimColor(float4 RimColor, float3 normal: NORMAL , float NdotL, float3 v
 	return getRimAmmount(normal, NdotL, viewDir, RimAmount, RimThreshold) * RimColor;
 }
 
-float ComputeDirectionLight(float3 normal: NORMAL, float shadow){
-	#if defined(UNITY_PASS_FORWARDBASE) || defined(UNITY_PASS_DEFERRED)
-		#if defined(DIRECTIONAL) || defined(DIRECTIONAL_COOKIE)
-			float NdotL = dot(_WorldSpaceLightPos0, normal);
-			float lightIntensity = smoothstep(0, 0.01, NdotL * shadow);
-			return lightIntensity;
-		#else
-			return 0;
-		#endif
-	#else
-		return 0;
-	#endif
-}
-
 #endif

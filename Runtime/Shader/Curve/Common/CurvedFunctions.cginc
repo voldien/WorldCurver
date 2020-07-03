@@ -50,8 +50,6 @@ float4 curveWorldSpaceTransformation(float curveStrength, float4 direction, floa
 }
 
 
-
-
 float4 curveWorldSpaceFadeTransformation(float curveStrength, float4 direction, float4 worldPosition){
 	/*	*/
 	half2 wpToCam = _WorldSpaceCameraPos.xz - worldPosition.xz; 
@@ -79,18 +77,22 @@ float curvedDistance(float vertex : SV_POSITION){
 *	Compute normal rotation.
 */
 float3 curveNormal(float curveStrength, float4 direction, float distance, float3 normal : SV_POSITION){
-	float angleY = radians(curveStrength);
-	float c = cos(angleY);
-	float s = sin(angleY);
-	float4x4 rotateXMatrix	= float4x4(	1,	0,	0,	0,
-	0,	c,	-s,	0,
-	0,	s,	c,	0,
-	0,	0,	0,	1);
-	return mul(rotateXMatrix, float4(normal, 0)).xyz;
+	#if defined(CURVED_ON)
+		float angleY = radians(curveStrength);
+		float c = cos(angleY);
+		float s = sin(angleY);
+		float4x4 rotateXMatrix	= float4x4(	1,	0,	0,	0,
+		0,	c,	-s,	0,
+		0,	s,	c,	0,
+		0,	0,	0,	1);
+		return mul(rotateXMatrix, float4(normal, 0)).xyz;
+	#else
+		return UnityObjectToWorldNormal(normal);	
+	#endif
 }
 
-
 float4 curveWorldVertexTransformationWorldVertex(float4 WorldVertex){
+	#if defined(CURVED_ON)
 	switch(_CurveMode){
 		default:
 		case CURVE_CLIP_SPACE:
@@ -100,21 +102,29 @@ float4 curveWorldVertexTransformationWorldVertex(float4 WorldVertex){
 		case CURVE_VIEW_SPACE:
 		return curveViewSpaceTransformation(_CurveStrength, _Direction,  mul(unity_ObjectToWorld, WorldVertex));
 	}
+	#else
+		return WorldVertex;
+	#endif
 }
 
 float4 curveTransformationWorldVertex(float4 objectVertex){
-	switch(_CurveMode){
-		default:
-		case CURVE_CLIP_SPACE:
-		return curvedClipSpaceTransformation(_CurveStrength, _Direction, UnityObjectToClipPos(objectVertex));
-		case CURVE_WORLD_SPACE:
-		return curveWorldSpaceTransformation(_CurveStrength, _Direction, mul(unity_ObjectToWorld, objectVertex));
-		case CURVE_VIEW_SPACE:
-		return curveViewSpaceTransformation(_CurveStrength, _Direction,  mul(unity_ObjectToWorld, objectVertex));
-	}
+	#if defined(CURVED_ON)
+		switch(_CurveMode){
+			default:
+			case CURVE_CLIP_SPACE:
+			return curvedClipSpaceTransformation(_CurveStrength, _Direction, UnityObjectToClipPos(objectVertex));
+			case CURVE_WORLD_SPACE:
+			return curveWorldSpaceTransformation(_CurveStrength, _Direction, mul(unity_ObjectToWorld, objectVertex));
+			case CURVE_VIEW_SPACE:
+			return curveViewSpaceTransformation(_CurveStrength, _Direction,  mul(unity_ObjectToWorld, objectVertex));
+		}
+	#else
+		return objectVertex;
+	#endif
 }
 
 float4 curveTransformationClipSpace(float4 objectVertex){
+	#if defined(CURVED_ON)
 	switch(_CurveMode){
 		default:
 		case CURVE_CLIP_SPACE:
@@ -124,6 +134,9 @@ float4 curveTransformationClipSpace(float4 objectVertex){
 		case CURVE_VIEW_SPACE:
 		return UnityObjectToClipPos(curveViewSpaceTransformation(_CurveStrength, _Direction,  mul(unity_ObjectToWorld, objectVertex)));
 	}
+	#else
+		return UnityObjectToClipPos(objectVertex);
+	#endif
 }
 
 #endif

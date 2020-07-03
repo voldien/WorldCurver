@@ -1,7 +1,8 @@
 #include "UnityCG.cginc"
+#include "UnityStandardUtils.cginc"
 #include "CurvedFunctions.cginc"
 #include "CurvedGlobalVariables.cginc"
-
+#include "VisualFunctions/Fresnel.cginc"
 
 //TODO rename
 UNITY_INSTANCING_BUFFER_START(Props)
@@ -29,7 +30,6 @@ struct v2f
 sampler2D _MainTex;
 float4 _MainTex_ST;
 
-
 //TODO rename to unlit 
 v2f vert(appdata v)
 {
@@ -44,6 +44,8 @@ v2f vert(appdata v)
 	UNITY_TRANSFER_FOG(o, o.vertex);
 	return o;
 }
+
+//half3 ambient = ShadeSHPerPixel(i.worldNormal, currentAmbient, i.worldPos);
 
 fixed4 frag(v2f i) : SV_Target
 {
