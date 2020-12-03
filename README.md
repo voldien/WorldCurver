@@ -2,12 +2,13 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![GitHub release](https://img.shields.io/github/release/voldien/WorldCurver.svg)](https://github.com/voldien/WorldCurver/releases)
 
-A collection of shader with world curving feature. It can be configured intensity of the curve and what direction. Furthermore, in what vector space such as clip space, world space and view space.
+A collection of shader with world curving feature. It can be configured intensity of the curve and what direction. In addition, in what vector space such as clip space, world space and view space shall the curving take place.
 
 # Features
 - Physical Based Rendering Shaders
 - Cel Shading
 - Mobile Shaders
+- Forward and Deferred Rendering pipeline support
 
 # Installation
 
