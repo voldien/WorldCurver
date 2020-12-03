@@ -1,4 +1,4 @@
-﻿Shader "Curve/CelShadedUnlit"
+﻿Shader "Curve/CelShaded/Unlit"
 {
 	Properties
 	{
@@ -16,6 +16,7 @@
 
 		Pass
 		{
+			Name "Forward Curved Unlit CelShaded"
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
@@ -26,8 +27,9 @@
 			#include "Lighting.cginc"
 			#include "../Common/CurvedFunctions.cginc"
 			#include "../Common/CurvedGlobalVariables.cginc"
+			//#include "../Common/CurvedCelShadedCode.cginc"
 			#include "UnityCG.cginc"
-			#include "../../CelShading/CelShade.cginc"
+
 
 			UNITY_INSTANCING_BUFFER_START(Props)
 			UNITY_DEFINE_INSTANCED_PROP(fixed4, _Color)

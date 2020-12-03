@@ -1,4 +1,4 @@
-Shader "Curve/CelShaded/Outline"
+Shader "Curve/CelShaded/UnlitOutline"
 {
 	Properties
 	{
@@ -17,8 +17,6 @@ Shader "Curve/CelShaded/Outline"
 		_OutlineColor ("Outline color", Color) = (0,0,0,1)
 		_OutlineWidth ("Outlines width", Range (0.0, 2.0)) = 1.1
 
-		[Toggle(_OUTLINE_MAP)] _Fancy ("Outline", Float) = 0	
-
         [Header(Blend State)]
         [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend("SrcBlend", Float) = 1 //"One"
         [Enum(UnityEngine.Rendering.BlendMode)] _DstBlend("DestBlend", Float) = 0 //"Zero"
@@ -30,14 +28,15 @@ Shader "Curve/CelShaded/Outline"
         [Enum(Off,0,On,1)] _ZWrite("ZWrite", Float) = 1.0 											//"On"
         [Enum(UnityEngine.Rendering.ColorWriteMask)] _ColorWriteMask("ColorWriteMask", Float) = 15 	//"All"
 	}
+	CustomEditor "ShaderEditor"
 	SubShader
-	{
+	{		
 		Tags { "RenderType"="Opaque" "DisableBatching"="False" "CanUseSpriteAtlas"="True" }
 		LOD 600
-		
+
 		UsePass "Curve/CelShaded/META"
 		UsePass "Outlined/Triangle/Triangle"
-		UsePass "Curve/CelShaded/ForwardBase Curved CelShaded"
+		UsePass "Curve/CelShaded/Unlit/Forward Curved Unlit CelShaded"
 
 		/*
 		Pass{

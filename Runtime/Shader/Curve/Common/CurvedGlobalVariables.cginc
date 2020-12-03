@@ -1,7 +1,10 @@
 #ifndef _GLOBAL_AXIS_CURVE_VARIABLES_
 #define _GLOBAL_AXIS_CURVE_VARIABLES_ 1
 
+/*	Global curve pragma.	*/
 #pragma multi_compile CURVED_ON CURVED_OFF
+/*	Local outline pragmas.	*/
+#pragma multi_compile_local OUTLINE_TRIANGLE OUTLINE_REGULAR OUTLINE_CUSTOM
 //#pragma multi_compile _ CURVED_ON
 
 /*	Curve mode.	*/

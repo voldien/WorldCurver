@@ -1,8 +1,8 @@
 #ifndef _CURVED_CELSHADED_CODE_GCINC_
 // Upgrade NOTE: excluded shader from DX11; has structs without semantics (struct v2f members diff)
-#pragma exclude_renderers d3d11
 #define _CURVED_CELSHADED_CODE_GCINC_ 1
 
+#pragma exclude_renderers d3d11
 #include "CurvedGlobalVariables.cginc"
 
 #include "UnityCG.cginc"
@@ -12,7 +12,7 @@
 #include "UnityStandardUtils.cginc"
 
 #include "CurvedFunctions.cginc"
-#include "../../CelShading/CelShade.cginc"
+#include "CelShade.cginc"
 
 struct appdata
 {
@@ -167,6 +167,8 @@ half4 ComputeDirectionLight(v2f i) {
 	#endif
 }
 
+
+
 fixed4 frag (v2f i) : SV_Target
 {
 	UNITY_SETUP_INSTANCE_ID(i);
@@ -212,8 +214,15 @@ fixed4 frag (v2f i) : SV_Target
 	#endif
 	
 	/*	*/
+#ifdef _USE_EMISSION_TEX
+	#ifdef UNITY_HDR_ON
+	
+	#endif
+	fixed emission = tex2D(_EmissionTex, i.uv) * UNITY_ACCESS_INSTANCED_PROP(Props, _Emission);
+	fixed4 col = tex2D(_MainTex, i.uv) * UNITY_ACCESS_INSTANCED_PROP(Props, _Color) * ( ambient + totalLightAcc + specular + rim + emission);
+#else
 	fixed4 col = tex2D(_MainTex, i.uv) * UNITY_ACCESS_INSTANCED_PROP(Props, _Color) * ( ambient + totalLightAcc + specular + rim);
-	col += GetEmission(i);
+#endif 
 	
 	UNITY_APPLY_FOG(i.fogCoord, col);
 	return col;

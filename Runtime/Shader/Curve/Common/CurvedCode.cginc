@@ -1,8 +1,10 @@
+#ifndef _CURVE_CODE_CGINC_
+#define _CURVE_CODE_CGINC_ 1
 #include "UnityCG.cginc"
 #include "UnityStandardUtils.cginc"
 #include "CurvedFunctions.cginc"
 #include "CurvedGlobalVariables.cginc"
-#include "VisualFunctions/Fresnel.cginc"
+//#include "VisualFunctions/Fresnel.cginc"
 
 //TODO rename
 UNITY_INSTANCING_BUFFER_START(Props)
@@ -62,3 +64,5 @@ fixed4 frag(v2f i) : SV_Target
 	UNITY_APPLY_FOG(i.fogCoord, col);
 	return col;
 }
+
+#endif 

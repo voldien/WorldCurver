@@ -1,4 +1,4 @@
-Shader "Curve/CelShaded Translucent"
+Shader "Curve/CelShaded/Translucent"
 {
 	Properties
 	{
@@ -112,8 +112,8 @@ Shader "Curve/CelShaded Translucent"
 			#include "AutoLight.cginc"
 
 			#include "../Common/CurvedFunctions.cginc"
-			#include "../../CelShading/CelShade.cginc"
-
+//			#include "../../CelShading/CelShade.cginc"
+			#include"../Common/CurvedCelShadedCode.cginc"
 
 			#include "UnityPBSLighting.cginc"
 

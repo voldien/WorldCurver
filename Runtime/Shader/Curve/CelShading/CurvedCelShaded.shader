@@ -1,4 +1,4 @@
-Shader "Curve/CelShaded"
+Shader "Curve/CelShaded/CelShaded"
 {
 	Properties
 	{
@@ -20,6 +20,19 @@ Shader "Curve/CelShaded"
         [Enum(UnityEngine.Rendering.BlendMode)] _DstBlend("DestBlend", Float) = 0 //"Zero"
         [Space(5)]
 
+		[Header(Outline)]
+		[Toggle(_OUTLINE)] 
+		_FancyOutline ("Outline", Float) = 0
+		[KeywordEnum(None, OUTLINE_TRIANGLE, OUTLINE_REGULAR, OUTLINE_CUSTOM)] _Overlay ("Overlay mode", Float) = 0
+		_OutlineColor ("Outline color", Color) = (0,0,0,1)
+		_OutlineWidth ("Outlines width", Range (0.0, 2.0)) = 1.1
+
+		[Header(Emission)]
+		[Toggle(_USE_EMISSION_TEX)] _Fancy ("Emission", Float) = 0	
+		[HDR]
+		_Emission ("Color", Color) = (0, 0, 0)
+		[HDR,NoScaleOffset] _EmissionTex ("Texture", 2D) = "black" {}
+
         [Header(Other)]
         [Enum(UnityEngine.Rendering.CullMode)] _Cull("Cull", Float) = 2 							//"Back"
         [Enum(UnityEngine.Rendering.CompareFunction)] _ZTest("ZTest", Float) = 4 					//"LessEqual"
@@ -30,6 +43,8 @@ Shader "Curve/CelShaded"
 	{
 		Tags { "RenderType"="Opaque"  "DisableBatching"="False" "CanUseSpriteAtlas"="True" }
 		LOD 600
+		UsePass "Outlined/Uniform/Uniform"
+
 		Pass
 		{
 			Name "META"
@@ -80,6 +95,10 @@ Shader "Curve/CelShaded"
 				"PassFlags" = "OnlyDirectional"
 			}
 			CGPROGRAM
+			/*	*/
+			#pragma shader_feature _USE_EMISSION_TEX
+
+
 			#pragma vertex vert
 			#pragma fragment frag
 
@@ -96,7 +115,9 @@ Shader "Curve/CelShaded"
 
 			UNITY_INSTANCING_BUFFER_START(Props)
 			UNITY_DEFINE_INSTANCED_PROP(fixed4, _Color)
+			UNITY_DEFINE_INSTANCED_PROP(fixed4, _Emission)
 			UNITY_INSTANCING_BUFFER_END(Props)
+
 
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
@@ -106,6 +127,9 @@ Shader "Curve/CelShaded"
 			float4 _RimColor;
 			float _RimAmount;
 			float _RimThreshold;
+
+			sampler2D _EmissionTex;
+			float4 _EmissionTex_ST;
 
 			//UNITY_SPECCUBE_BOX_PROJECTION
 			//UNITY_SPECCUBE_BLENDING
@@ -193,7 +217,7 @@ Shader "Curve/CelShaded"
 			#include "AutoLight.cginc"
 
 			#include "../Common/CurvedFunctions.cginc"
-			#include "../../CelShading/CelShade.cginc"
+			#include "../Common/CelShade.cginc"
 
 
 			#include "UnityPBSLighting.cginc"

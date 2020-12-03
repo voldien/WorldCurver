@@ -7,7 +7,6 @@
 #include "AutoLight.cginc"
 
 #include "CurvedFunctions.cginc"
-#include "VisualFunctions/Fresnel.cginc"
 #include "CurvedGlobalVariables.cginc"
 
 //TODO rename

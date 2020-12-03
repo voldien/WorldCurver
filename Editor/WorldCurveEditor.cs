@@ -8,6 +8,7 @@ namespace WorldCurver
 	[CustomEditor(typeof(WorldCurver))]
 	public class WorldCurveEditor : Editor
 	{
+		private SerializedProperty cam;
 		private SerializedProperty curveSpace;
 		private SerializedProperty curveStrength;
 		private SerializedProperty curveHorizon;
@@ -16,6 +17,7 @@ namespace WorldCurver
 		private SerializedProperty horizon;
 		private SerializedProperty fadeHorizontrue;
 		private SerializedProperty influence;
+		private SerializedProperty distanceMethod;
 
 		private GUIContent m_style_CurveSpace;
 		private GUIContent m_style_CurveStrength;
@@ -31,20 +33,23 @@ namespace WorldCurver
 
 		private void fetchSerializeProperty()
 		{
-			this.curveSpace = serializedObject.FindProperty("curveSpace");
-			this.curveStrength = serializedObject.FindProperty("curveStrength");
-			this.curveHorizon = serializedObject.FindProperty("curveHorizon");
-			this.curveFadeDist = serializedObject.FindProperty("curveFadeDist");
-			this.direction = serializedObject.FindProperty("direction");
-			this.horizon = serializedObject.FindProperty("horizon");
-			this.fadeHorizontrue = serializedObject.FindProperty("fadeHorizontrue");
-			this.influence = serializedObject.FindProperty("influence");
+			this.cam = serializedObject.FindProperty("cam");
+			this.curveSpace = serializedObject.FindProperty("m_curveSpace");
+			this.curveStrength = serializedObject.FindProperty("m_curveStrength");
+			this.curveHorizon = serializedObject.FindProperty("m_curveHorizon");
+			this.curveFadeDist = serializedObject.FindProperty("m_curveFadeDist");
+			this.direction = serializedObject.FindProperty("m_direction");
+			this.horizon = serializedObject.FindProperty("m_horizon");
+			this.fadeHorizontrue = serializedObject.FindProperty("m_fadeHorizontrue");
+			this.influence = serializedObject.FindProperty("m_influence");
+			this.distanceMethod = serializedObject.FindProperty("m_distanceMethod");
 		}
 
 		public override void OnInspectorGUI()
 		{
+			EditorGUILayout.LabelField("Camera Settings", EditorStyles.boldLabel);
 			serializedObject.Update();
-
+			EditorGUILayout.PropertyField(this.cam, new GUIContent("Camera", this.cam.tooltip));
 			/*	*/
 			EditorGUILayout.LabelField("Curve Settings", EditorStyles.boldLabel);
 			EditorGUILayout.PropertyField(this.curveSpace, new GUIContent("Curve Space", this.curveSpace.tooltip));
@@ -59,6 +64,7 @@ namespace WorldCurver
 			EditorGUILayout.LabelField("Curve Horizon Settings", EditorStyles.boldLabel);
 			EditorGUILayout.PropertyField(this.horizon);
 			EditorGUILayout.PropertyField(this.fadeHorizontrue);
+			EditorGUILayout.PropertyField(this.distanceMethod);
 
 			/*	*/
 			EditorGUILayout.PropertyField(this.curveHorizon);
