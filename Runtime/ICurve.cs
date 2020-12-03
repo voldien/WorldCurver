@@ -5,12 +5,12 @@ namespace WorldCurver{
 
 	public enum CurveSpace
 	{
-		[Tooltip("Curve using the clip space.")]
-		ClipSpace,
-		[Tooltip("Curve using world space.")]
-		WorldSpace,
-		[Tooltip("Curve using world space.")]
-		ViewSpace,
+		/*	Curve using the clip space.	*/
+		ClipSpace = 0,
+		/*	Curve using world space.	*/
+		WorldSpace = 1,
+		/*	Curve using view space.	*/
+		ViewSpace = 2,
 	}
 
 	public interface ICurve {
