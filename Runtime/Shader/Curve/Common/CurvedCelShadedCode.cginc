@@ -103,8 +103,12 @@ half4 GetAmbient(v2f i){
 
 half4 GetEmission (v2f i) {
 	#if defined(UNITY_PASS_FORWARDBASE) || defined(UNITY_PASS_DEFERRED)
-		#if defined(_EMISSION_MAP)
-			return tex2D(_EmissionTex, i.uv) * UNITY_ACCESS_INSTANCED_PROP(Props, _Emission)
+		#if defined(_USE_EMISSION_TEX)
+			half4 emission = tex2D(_EmissionTex, i.uv) * UNITY_ACCESS_INSTANCED_PROP(Props, _Emission);
+			#ifndef UNITY_HDR_ON
+			emission.rgb = exp2(-emission.rgb);
+			#endif
+			return emission;
 		#else
 			return 0;
 		#endif
@@ -167,8 +171,6 @@ half4 ComputeDirectionLight(v2f i) {
 		return 0;
 	#endif
 }
-
-
 
 fixed4 frag (v2f i) : SV_Target
 {

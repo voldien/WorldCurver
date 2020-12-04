@@ -53,15 +53,12 @@
 			#pragma multi_compile_fog
 			#pragma noshadow novertexlights nolightmap nodynlightmap nodirlightmap nometa noforwardadd nolppv noshadowmask
 			#pragma multi_compile_instancing 
-			/*	*/
-			#pragma shader_feature _USE_EMISSION_TEX
 
 			#include "Lighting.cginc"
 			#include "UnityCG.cginc"
 
 			UNITY_INSTANCING_BUFFER_START(Props)
 			UNITY_DEFINE_INSTANCED_PROP(fixed4, _Color)
-			UNITY_DEFINE_INSTANCED_PROP(fixed4, _Emission)
 			UNITY_INSTANCING_BUFFER_END(Props)
 
 			sampler2D _MainTex;

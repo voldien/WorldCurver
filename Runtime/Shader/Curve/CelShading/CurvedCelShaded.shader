@@ -98,8 +98,6 @@ Shader "Curve/CelShaded/CelShaded"
 			CGPROGRAM
 			/*	*/
 			#pragma shader_feature _USE_EMISSION_TEX
-
-
 			#pragma vertex vert
 			#pragma fragment frag
 
@@ -209,6 +207,7 @@ Shader "Curve/CelShaded/CelShaded"
 			#pragma exclude_renderers nomrt
 			//#pragma multi_compile_lightpass
 			#pragma multi_compile ___ UNITY_HDR_ON
+			#pragma shader_feature _USE_EMISSION_TEX
 			#pragma target 3.0
 			
 			#include "../Common/CurvedGlobalVariables.cginc"
@@ -220,11 +219,11 @@ Shader "Curve/CelShaded/CelShaded"
 			#include "../Common/CurvedFunctions.cginc"
 			#include "../Common/CelShade.cginc"
 
-
 			#include "UnityPBSLighting.cginc"
 
 			UNITY_INSTANCING_BUFFER_START(Props)
 			UNITY_DEFINE_INSTANCED_PROP(fixed4, _Color)
+			UNITY_DEFINE_INSTANCED_PROP(fixed4, _Emission)
 			UNITY_INSTANCING_BUFFER_END(Props)
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
@@ -234,6 +233,9 @@ Shader "Curve/CelShaded/CelShaded"
 			float4 _RimColor;
 			float _RimAmount;
 			float _RimThreshold;
+
+			sampler2D _EmissionTex;
+			float4 _EmissionTex_ST;
 
 			struct appdata
 			{
@@ -283,24 +285,12 @@ Shader "Curve/CelShaded/CelShaded"
 				structurePS ps;
 				UNITY_SETUP_INSTANCE_ID(vs);
 
-		// 		#if defined(SHADOWS_SCREEN)
-		// 	shadowed = true;
-		// 	shadowAttenuation = tex2D(_ShadowMapTexture, uv).r;
-
-		// 	float shadowFadeDistance =
-		// 		UnityComputeShadowFadeDistance(worldPos, viewZ);
-		// 	float shadowFade = UnityComputeShadowFade(shadowFadeDistance);
-		// 	shadowAttenuation = saturate(shadowAttenuation + shadowFade);
-		// #endif
-
 				/*	*/
 				float3 normal = normalize(vs.normal);
 				
 				/*	*/
 				float NdotL = dot(_WorldSpaceLightPos0, normal);
-				float shadow = SHADOW_ATTENUATION(vs);
-				float lightIntensity = smoothstep(0, 0.01, NdotL * shadow);
-
+				float lightIntensity = smoothstep(0, 0.01, NdotL);
 				/*	*/
 				float3 viewDir = normalize(vs.viewDir);
 
@@ -317,7 +307,11 @@ Shader "Curve/CelShaded/CelShaded"
 
 				ps.specular = float4((_SpecularColor + rim).xyz, specularIntensity);
 				ps.normal = half4( normal * 0.5 + 0.5, 1.0 );
-				ps.emission = half4(0,0,0,1);
+				#if defined(_USE_EMISSION_TEX)
+					ps.emission = tex2D(_EmissionTex, i.uv) * UNITY_ACCESS_INSTANCED_PROP(Props, _Emission)
+				#else
+					ps.emission = half4(0,0,0,1);
+				#endif
 				#ifndef UNITY_HDR_ON
 					ps.emission.rgb = exp2(-ps.emission.rgb);
 				#endif

@@ -26,7 +26,7 @@ Shader "Curve/VertexLitShadowTranslucent"
 
 			struct v2f { 
 				V2F_SHADOW_CASTER;
-				float2 uv : TEXCOORD0;
+				float2 uv : TEXCOORD1;
 			};
 
 			v2f vert(appdata_base v)
