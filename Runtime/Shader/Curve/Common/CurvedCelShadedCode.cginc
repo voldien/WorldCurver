@@ -235,7 +235,3 @@ fixed4 frag (v2f i) : SV_Target
 }
 
 #endif
-// // sample the texture
-// #if defined(UNITY_HDR_ON)
-
-// #endif

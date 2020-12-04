@@ -1,6 +1,8 @@
-#ifndef _CURVED_FUNCTIONS_
-#define _CURVED_FUNCTIONS_ 1
+#ifndef _CURVED_FUNCTIONS_CGINC_
+#define _CURVED_FUNCTIONS_CGINC_ 1
 #include"CurvedGlobalVariables.cginc"
+/*	Global curve pragma.	*/
+#pragma multi_compile __ CURVED_ON
 
 float fadeDistanceFactor(float distance){
 	half diffDistance = (distance - _Horizon * 10);
@@ -91,8 +93,9 @@ float3 curveNormal(float curveStrength, float4 direction, float distance, float3
 	#endif
 }
 
+//TODO Resolve multi compile to work with the world curve script!
 float4 curveWorldVertexTransformationWorldVertex(float4 WorldVertex){
-	#if defined(CURVED_ON)
+//	#if defined(CURVED_ON)
 	switch(_CurveMode){
 		default:
 		case CURVE_CLIP_SPACE:
@@ -102,13 +105,13 @@ float4 curveWorldVertexTransformationWorldVertex(float4 WorldVertex){
 		case CURVE_VIEW_SPACE:
 		return curveViewSpaceTransformation(_CurveStrength, _Direction,  mul(unity_ObjectToWorld, WorldVertex));
 	}
-	#else
-		return WorldVertex;
-	#endif
+	// #else
+	// 	return WorldVertex;
+	// #endif
 }
 
 float4 curveTransformationWorldVertex(float4 objectVertex){
-	#if defined(CURVED_ON)
+	//#if defined(CURVED_ON)
 		switch(_CurveMode){
 			default:
 			case CURVE_CLIP_SPACE:
@@ -118,13 +121,13 @@ float4 curveTransformationWorldVertex(float4 objectVertex){
 			case CURVE_VIEW_SPACE:
 			return curveViewSpaceTransformation(_CurveStrength, _Direction,  mul(unity_ObjectToWorld, objectVertex));
 		}
-	#else
-		return objectVertex;
-	#endif
+	//#else
+	//	return objectVertex;
+	//#endif
 }
 
 float4 curveTransformationClipSpace(float4 objectVertex){
-	#if defined(CURVED_ON)
+//	#if defined(CURVED_ON)
 	switch(_CurveMode){
 		default:
 		case CURVE_CLIP_SPACE:
@@ -134,9 +137,9 @@ float4 curveTransformationClipSpace(float4 objectVertex){
 		case CURVE_VIEW_SPACE:
 		return UnityObjectToClipPos(curveViewSpaceTransformation(_CurveStrength, _Direction,  mul(unity_ObjectToWorld, objectVertex)));
 	}
-	#else
-		return UnityObjectToClipPos(objectVertex);
-	#endif
+	// #else
+	// 	return UnityObjectToClipPos(objectVertex);
+	// #endif
 }
 
 #endif

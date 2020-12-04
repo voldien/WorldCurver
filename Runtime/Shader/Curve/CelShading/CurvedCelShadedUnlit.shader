@@ -16,8 +16,6 @@
         [Space(5)]
 
 		[Header(Outline)]
-		[Toggle(_OUTLINE_ON)] 
-		_UseOutline ("Outline", Float) = 0
 		[KeywordEnum(None, TRIANGLE, REGULAR, UNIFORM, CUSTOM)] _Outline ("Outline mode", Float) = 0
 		_OutlineColor ("Outline color", Color) = (0,0,0,1)
 		_OutlineWidth ("Outlines width", Range (0.0, 2.0)) = 1.1

@@ -22,8 +22,6 @@ Shader "Curve/CelShaded/CelShaded"
         [Space(5)]
 
 		[Header(Outline)]
-		[Toggle(_OUTLINE_ON)] 
-		_UseOutline ("Outline", Float) = 0
 		[KeywordEnum(None, TRIANGLE, REGULAR, UNIFORM, CUSTOM)] _Outline ("Outline mode", Float) = 0
 		_OutlineColor ("Outline color", Color) = (0,0,0,1)
 		_OutlineWidth ("Outlines width", Range (0.0, 2.0)) = 1.1
@@ -97,7 +95,7 @@ Shader "Curve/CelShaded/CelShaded"
 			}
 			CGPROGRAM
 			/*	*/
-			#pragma shader_feature _USE_EMISSION_TEX
+			#pragma shader_feature _USE_EMISSION_TEX CURVE_ON
 			#pragma vertex vert
 			#pragma fragment frag
 
@@ -105,6 +103,7 @@ Shader "Curve/CelShaded/CelShaded"
 			#pragma multi_compile_instancing addshadow
 			#pragma multi_compile_fwdbase
 			#pragma target 3.0
+			#include "../Common/CurvedGlobalVariables.cginc"
 
 			#pragma multi_compile _ UNITY_HDR_ON
 			#pragma multi_compile _ LIGHTPROBE_SH
@@ -308,7 +307,7 @@ Shader "Curve/CelShaded/CelShaded"
 				ps.specular = float4((_SpecularColor + rim).xyz, specularIntensity);
 				ps.normal = half4( normal * 0.5 + 0.5, 1.0 );
 				#if defined(_USE_EMISSION_TEX)
-					ps.emission = tex2D(_EmissionTex, i.uv) * UNITY_ACCESS_INSTANCED_PROP(Props, _Emission)
+					ps.emission = tex2D(_EmissionTex, vs.uv) * UNITY_ACCESS_INSTANCED_PROP(Props, _Emission)
 				#else
 					ps.emission = half4(0,0,0,1);
 				#endif
