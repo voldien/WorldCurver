@@ -2,6 +2,7 @@ Shader "Curve/CelShaded/CelShaded"
 {
 	Properties
 	{
+		[KeywordEnum(None, TRIANGLE, REGULAR, UNIFORM, CUSTOM)] _Clip ("", Float) = 0
 		[Header(Main Color)]
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Texture", 2D) = "white" {}
@@ -21,14 +22,14 @@ Shader "Curve/CelShaded/CelShaded"
         [Space(5)]
 
 		[Header(Outline)]
-		[Toggle(_OUTLINE)] 
-		_FancyOutline ("Outline", Float) = 0
-		[KeywordEnum(None, OUTLINE_TRIANGLE, OUTLINE_REGULAR, OUTLINE_CUSTOM)] _Overlay ("Overlay mode", Float) = 0
+		[Toggle(_OUTLINE_ON)] 
+		_UseOutline ("Outline", Float) = 0
+		[KeywordEnum(None, TRIANGLE, REGULAR, UNIFORM, CUSTOM)] _Outline ("Outline mode", Float) = 0
 		_OutlineColor ("Outline color", Color) = (0,0,0,1)
 		_OutlineWidth ("Outlines width", Range (0.0, 2.0)) = 1.1
 
 		[Header(Emission)]
-		[Toggle(_USE_EMISSION_TEX)] _Fancy ("Emission", Float) = 0	
+		[Toggle(_USE_EMISSION_TEX)] _UseEmission ("Emission", Float) = 0	
 		[HDR]
 		_Emission ("Color", Color) = (0, 0, 0)
 		[HDR,NoScaleOffset] _EmissionTex ("Texture", 2D) = "black" {}
@@ -43,7 +44,7 @@ Shader "Curve/CelShaded/CelShaded"
 	{
 		Tags { "RenderType"="Opaque"  "DisableBatching"="False" "CanUseSpriteAtlas"="True" }
 		LOD 600
-		UsePass "Outlined/Uniform/Uniform"
+		UsePass "Outlined/Outline/Outline"
 
 		Pass
 		{
@@ -77,7 +78,7 @@ Shader "Curve/CelShaded/CelShaded"
 			
 			#pragma vertex vert_meta
 			#pragma fragment frag_meta2
-			#pragma shader_feature _EMISSION
+			#pragma shader_feature _USE_EMISSION_TEX
 			ENDCG
 		}
 
@@ -102,8 +103,8 @@ Shader "Curve/CelShaded/CelShaded"
 			#pragma vertex vert
 			#pragma fragment frag
 
-			#pragma multi_compile_fog
-			#pragma multi_compile_instancing
+			#pragma multi_compile_fog 
+			#pragma multi_compile_instancing addshadow
 			#pragma multi_compile_fwdbase
 			#pragma target 3.0
 

@@ -41,10 +41,11 @@ struct v2f
 		float3 worldPos : TEXCOORD5;
 	#endif
 	#if defined(LIGHTPROBE_SH)
-	float4 ambient : COLOR;
+	float4 ambient : COLOR1;
 	#endif
 	UNITY_FOG_COORDS(3)
 	SHADOW_COORDS(2)
+	//#endif
 	UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
@@ -74,7 +75,7 @@ v2f vert (appdata v)
 	#endif
 
 	#if defined(VERTEXLIGHT_ON)
-		o.vertexLightColor = ShadeVertexLights(v.pos, v.worldNormal);
+		o.vertexLightColor = float4(ShadeVertexLights(o.pos, o.worldNormal), 1.0);
 	#endif
 	
 	#if defined(LIGHTPROBE_SH)
@@ -103,7 +104,7 @@ half4 GetAmbient(v2f i){
 half4 GetEmission (v2f i) {
 	#if defined(UNITY_PASS_FORWARDBASE) || defined(UNITY_PASS_DEFERRED)
 		#if defined(_EMISSION_MAP)
-			return tex2D(_EmissionMap, i.uv.xy) * _Emission;
+			return tex2D(_EmissionTex, i.uv) * UNITY_ACCESS_INSTANCED_PROP(Props, _Emission)
 		#else
 			return 0;
 		#endif
@@ -218,19 +219,20 @@ fixed4 frag (v2f i) : SV_Target
 	#ifdef UNITY_HDR_ON
 	
 	#endif
-	fixed emission = tex2D(_EmissionTex, i.uv) * UNITY_ACCESS_INSTANCED_PROP(Props, _Emission);
+	
+	fixed emission = GetEmission(i);
 	fixed4 col = tex2D(_MainTex, i.uv) * UNITY_ACCESS_INSTANCED_PROP(Props, _Color) * ( ambient + totalLightAcc + specular + rim + emission);
 #else
 	fixed4 col = tex2D(_MainTex, i.uv) * UNITY_ACCESS_INSTANCED_PROP(Props, _Color) * ( ambient + totalLightAcc + specular + rim);
-#endif 
+
+	//clip(col.a - _Cutout);
+#endif
 	
 	UNITY_APPLY_FOG(i.fogCoord, col);
 	return col;
 }
 
 #endif
-
-
 // // sample the texture
 // #if defined(UNITY_HDR_ON)
 

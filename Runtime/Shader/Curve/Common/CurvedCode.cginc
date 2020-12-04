@@ -4,7 +4,6 @@
 #include "UnityStandardUtils.cginc"
 #include "CurvedFunctions.cginc"
 #include "CurvedGlobalVariables.cginc"
-//#include "VisualFunctions/Fresnel.cginc"
 
 //TODO rename
 UNITY_INSTANCING_BUFFER_START(Props)
