@@ -18,7 +18,10 @@ namespace WorldCurver
 		private SerializedProperty fadeHorizontrue;
 		private SerializedProperty influence;
 		private SerializedProperty distanceMethod;
+		private SerializedProperty directionMethod;
 
+
+		private GUIContent m_style_camera_settings;
 		private GUIContent m_style_CurveSpace;
 		private GUIContent m_style_CurveStrength;
 		private GUIContent m_style_CurveDirection;
@@ -43,11 +46,15 @@ namespace WorldCurver
 			this.fadeHorizontrue = serializedObject.FindProperty("m_fadeHorizontrue");
 			this.influence = serializedObject.FindProperty("m_influence");
 			this.distanceMethod = serializedObject.FindProperty("m_distanceMethod");
+			this.directionMethod = serializedObject.FindProperty("m_directionMethod");
+
+			/*TODO	Create the gui content object.	*/
+			this.m_style_camera_settings = new GUIContent("Camera Settings", "Camera");
 		}
 
 		public override void OnInspectorGUI()
 		{
-			EditorGUILayout.LabelField("Camera Settings", EditorStyles.boldLabel);
+			EditorGUILayout.LabelField(m_style_camera_settings, EditorStyles.boldLabel);
 			serializedObject.Update();
 			EditorGUILayout.PropertyField(this.cam, new GUIContent("Camera", this.cam.tooltip));
 			/*	*/
@@ -63,8 +70,11 @@ namespace WorldCurver
 			/*	*/
 			EditorGUILayout.LabelField("Curve Horizon Settings", EditorStyles.boldLabel);
 			EditorGUILayout.PropertyField(this.horizon);
+			//TODO add condition for which attribute to show.
+
 			EditorGUILayout.PropertyField(this.fadeHorizontrue);
 			EditorGUILayout.PropertyField(this.distanceMethod);
+			EditorGUILayout.PropertyField(this.directionMethod);
 
 			/*	*/
 			EditorGUILayout.PropertyField(this.curveHorizon);

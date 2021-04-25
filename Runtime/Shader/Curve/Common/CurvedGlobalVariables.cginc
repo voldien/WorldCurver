@@ -27,6 +27,10 @@ float4 _Direction;
 
 half4 _LengthInfluence;	/*	Allow for certain axis to be compute differently.	*/
 
+float4x4 transision[10];
+
 CBUFFER_END
+
+
 
 #endif

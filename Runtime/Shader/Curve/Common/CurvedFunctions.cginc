@@ -1,8 +1,11 @@
 #ifndef _CURVED_FUNCTIONS_CGINC_
+// Upgrade NOTE: excluded shader from DX11, OpenGL ES 2.0 because it uses unsized arrays
+#pragma exclude_renderers d3d11 gles
 #define _CURVED_FUNCTIONS_CGINC_ 1
 #include"CurvedGlobalVariables.cginc"
 /*	Global curve pragma.	*/
 #pragma multi_compile __ CURVED_ON
+#pragma multi_compile __ CURVED_CUSTOM_TRANSFORMATION_ON
 
 float fadeDistanceFactor(float distance){
 	half diffDistance = (distance - _Horizon * 10);
@@ -140,6 +143,10 @@ float4 curveTransformationClipSpace(float4 objectVertex){
 	// #else
 	// 	return UnityObjectToClipPos(objectVertex);
 	// #endif
+}
+
+float4x4 getTransitionInterpolation(float4x4[] array, int len, float linearDepth){
+	return array[floor(linearDepth * len)];
 }
 
 #endif
