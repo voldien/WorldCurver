@@ -55,7 +55,6 @@
         Tags { "RenderType"="Opaque" "PerformanceChecks"="False" }
         LOD 300
 
-
 		ZWrite On ZTest LEqual
 		Cull Back
 
@@ -155,9 +154,14 @@
 			UNITY_INITIALIZE_OUTPUT(Input, o);
 			UNITY_SETUP_INSTANCE_ID(v);
 			UNITY_TRANSFER_INSTANCE_ID(v, o);
+
 			float4 ObjectCVertex = curveTransformationWorldVertex(v.vertex);
-			v.vertex = ObjectCVertex;
+			float camToFragWorldDist = curvedClipDistance(v.vertex);
+			float4x4 transi = getMatrix4x4TransitionInterpolation(_interpolateWorld, camToFragWorldDist);
+			v.vertex = mul(transi, ObjectCVertex);
 			v.normal = UnityObjectToWorldNormal(v.normal);
+
+
 			UNITY_TRANSFER_DEPTH(v);
 		}
 		ENDCG

@@ -78,6 +78,24 @@ float curvedDistance(float vertex : SV_POSITION){
 	return length(vertex);
 }
 
+#ifdef CURVED_CUSTOM_TRANSFORMATION_ON
+#endif
+float4x4 getMatrix4x4TransitionInterpolation(float4x4 array[8], float linearDepth){
+	const int len = 9;
+	float4x4 a = array[floor(linearDepth * len)];
+	float4x4 b = array[floor(linearDepth * len) + 1];
+
+	float rem = frac(linearDepth * len);
+	/*	*/
+	return float4x4(
+		lerp(a[0], b[0], rem),
+		lerp(a[1], b[1], rem),
+		lerp(a[2], b[2], rem),
+		lerp(a[3], b[3], rem)
+	);
+}
+
+
 /**
 *	Compute normal rotation.
 */
@@ -99,6 +117,7 @@ float3 curveNormal(float curveStrength, float4 direction, float distance, float3
 //TODO Resolve multi compile to work with the world curve script!
 float4 curveWorldVertexTransformationWorldVertex(float4 WorldVertex){
 //	#if defined(CURVED_ON)
+
 	switch(_CurveMode){
 		default:
 		case CURVE_CLIP_SPACE:
@@ -143,10 +162,6 @@ float4 curveTransformationClipSpace(float4 objectVertex){
 	// #else
 	// 	return UnityObjectToClipPos(objectVertex);
 	// #endif
-}
-
-float4x4 getTransitionInterpolation(float4x4[] array, int len, float linearDepth){
-	return array[floor(linearDepth * len)];
 }
 
 #endif

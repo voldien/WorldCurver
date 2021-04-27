@@ -39,6 +39,7 @@ v2f diffuse_vert(appdata v)
 	UNITY_TRANSFER_INSTANCE_ID(v, o);
 
 	float4 ObjectCVertex = curveTransformationWorldVertex(v.vertex);
+
 	o.pos = UnityObjectToClipPos(ObjectCVertex);
 
 	o.uv = TRANSFORM_TEX(v.uv, _MainTex);

@@ -17,18 +17,21 @@ int _CurveMode;
 /*	*/
 int _CurveFlags;
 /*	*/
-half _CurveStrength;
+float _CurveStrength;
 /*	*/
 float _Horizon;
 /*	*/
 float _FadeDist;
 /*	*/
-float4 _Direction;
+half4 _Direction;
 
-half4 _LengthInfluence;	/*	Allow for certain axis to be compute differently.	*/
+float4 _LengthInfluence;	/*	Allow for certain axis to be compute differently.	*/
 
-float4x4 transision[10];
+int _numberSamples;
+float4x4 _interpolateWorld[8];
+#ifdef CURVED_CUSTOM_TRANSFORMATION_ON
 
+#endif
 CBUFFER_END
 
 

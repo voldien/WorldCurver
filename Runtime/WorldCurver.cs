@@ -51,6 +51,8 @@ namespace WorldCurver {
 
 		[NonSerialized]
 		private Vector3 cam_dir;
+		[NonSerialized]
+		private Matrix4x4[] m_matrices = new Matrix4x4[8];
 
 		/*	Internal property IDs.	*/
 		[NonSerialized]
@@ -65,6 +67,13 @@ namespace WorldCurver {
 		private int m_CurveModeID;
 		[NonSerialized]
 		private int m_CurveInfluenceID;
+		[NonSerialized]
+		private int m_CurveMatrixID;
+
+		private void Awake() {
+
+
+		}
 
 		private void OnEnable()
 		{
@@ -75,6 +84,7 @@ namespace WorldCurver {
 			m_CurvedDirectionID = Shader.PropertyToID("_Direction");
 			m_CurveModeID = Shader.PropertyToID("_CurveMode");
 			m_CurveInfluenceID = Shader.PropertyToID("_LengthInfluence");
+			m_CurveMatrixID = Shader.PropertyToID("_interpolateWorld");
 
 			/*	Update shaders.	*/
 			updateAllGlobal();
@@ -155,7 +165,17 @@ namespace WorldCurver {
 		}
 
 		public void setMatrixTransition(Matrix4x4[] mats){
-			
+			this.m_matrices = mats;
+			updateAllGlobal();
+		}
+
+		public void setMatrixResolution(int samples){
+			this.m_matrices = new Matrix4x4[samples];
+		}
+
+		public void setMatrixTransition(Matrix4x4 matrix, int index){
+			this.m_matrices[index] = matrix;
+			updateAllGlobal();
 		}
 		
 		private void updateAllGlobal()
@@ -166,13 +186,18 @@ namespace WorldCurver {
 			switch (this.m_directionMethod)
 			{
 				case DirectionMethod.Camera:
-				Shader.SetGlobalVector(m_CurvedDirectionID, cam_dir);
-				Debug.Log(cam_dir);
+					Shader.SetGlobalVector(m_CurvedDirectionID, cam_dir);
 				 break;
 				default:
-			Shader.SetGlobalVector(m_CurvedDirectionID, m_direction);
+					Shader.SetGlobalVector(m_CurvedDirectionID, m_direction);
 				break;
 			}
+
+			/*	Update only if enabled.	*/
+			if(this.m_distanceMethod == DistanceMethod.Curve)
+				Shader.SetGlobalMatrixArray(m_CurveMatrixID, this.m_matrices);
+
+			/*	*/
 			Shader.SetGlobalVector(m_CurveInfluenceID, m_influence);
 			Shader.SetGlobalInt(m_CurveModeID, (int)m_curveSpace);
 		}
@@ -187,6 +212,13 @@ namespace WorldCurver {
 					break;
 				case DirectionMethod.Custom:
 					break;
+			}
+
+			for (int i = 0; i < 8; i++)
+			{
+				Quaternion rotation = Quaternion.Euler(0.0f, 0.0f, (float)Math.PI * 0.05f * i);
+				Matrix4x4 m = Matrix4x4.Rotate(rotation);
+				setMatrixTransition(m, i);
 			}
 
 		}
