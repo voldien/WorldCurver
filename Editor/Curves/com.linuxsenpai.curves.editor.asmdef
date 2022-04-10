@@ -1,9 +1,8 @@
 {
-    "name": "com.linuxsenpai.worldcurver.editor",
+    "name": "com.linuxsenpai.curves.editor",
     "rootNamespace": "",
     "references": [
-        "GUID:152cb096d6d354c7291a45e79c62df4d",
-        "GUID:b690f6a6ff22719108590dc9a6a3b09d"
+        "GUID:4dc05b85999baec4d9d2a990efda86af"
     ],
     "includePlatforms": [
         "Editor"

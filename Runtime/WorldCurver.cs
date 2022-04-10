@@ -1,60 +1,35 @@
 ﻿using UnityEngine;
 using System;
 
-namespace WorldCurver {
-
-	public enum DistanceMethod {
-		/*	*/
-		Distance = 0,
-		/*	*/
-		Plane = 1,
-		Curve = 2,
-	}
-
-	/// <summary>
-	/// 
-	/// </summary>
-	public enum DirectionMethod {
-		Custom,
-		Camera,
-	}
+namespace WorldCurver{
+	// public enum DistanceMethod {
+	// 	Distance,
+	// 	Plane
+	// }
 
 	[ExecuteInEditMode, AddComponentMenu("Curve/WorldCurver", 0)]
 	public class WorldCurver : MonoBehaviour, ICurve
 	{
-		[SerializeField, Tooltip("Camera the world is associated with.")]
-		public Camera cam;
 		[SerializeField, Tooltip("Space that the curve will be performed.")]
-		public CurveSpace m_curveSpace;
+		public CurveSpace curveSpace;
 		[Range(-1f, 1f), SerializeField,Tooltip("The strength of the curve.")]
-		public float m_curveStrength = 0.01f;
+		public float curveStrength = 0.01f;
 		[Range(-0.1f, 1000.0f), SerializeField,Tooltip("Distance from the horizon.")]
-		public float m_curveHorizon = 1000.0f;
+		public float curveHorizon = 1000.0f;
 		[Range(-0.1f, 1000.0f), SerializeField,Tooltip("The transition inbetween the horizion.")]
-		public float m_curveFadeDist = 10.0f;
+		public float curveFadeDist = 10.0f;
 		[SerializeField, Tooltip("The direction of the curvature in respect to the curve-space.")]
-		public Vector3 m_direction = new Vector3(0.0f, 1.0f, 0.0f);
+		public Vector4 direction = new Vector4(0.0f, 1.0f, 0.0f, 0.0f);
 
 		[SerializeField, Tooltip("Use horizion.")]
-		public bool m_horizon = true;
+		public bool horizon = true;
 		[SerializeField, Tooltip("Use Horizon Transition fade.")]
-		public bool m_fadeHorizontrue = true;
+		public bool fadeHorizontrue = true;
 		[SerializeField]
-		public Vector4 m_influence = new Vector4(1.0f,1.0f,1.0f, 0.0f);
+		public Vector4 influence;
 		[SerializeField]
-		public DistanceMethod m_distanceMethod;
-		[SerializeField,Tooltip("")]
-		public float mag = 20;
-		[SerializeField, Tooltip("")]
-		public DirectionMethod m_directionMethod;
-		public AnimationCurve animationCurve;
-
-		[NonSerialized]
-		private Vector3 cam_dir;
-		[NonSerialized]
-		private Matrix4x4[] m_matrices = new Matrix4x4[8];
-
-		/*	Internal property IDs.	*/
+		public DistanceMethod distanceMethod;
+		/*	Internal.	*/
 		[NonSerialized]
 		private int m_CurveStrengthID;
 		[NonSerialized]
@@ -67,13 +42,7 @@ namespace WorldCurver {
 		private int m_CurveModeID;
 		[NonSerialized]
 		private int m_CurveInfluenceID;
-		[NonSerialized]
-		private int m_CurveMatrixID;
 
-		private void Awake() {
-
-
-		}
 
 		private void OnEnable()
 		{
@@ -84,157 +53,102 @@ namespace WorldCurver {
 			m_CurvedDirectionID = Shader.PropertyToID("_Direction");
 			m_CurveModeID = Shader.PropertyToID("_CurveMode");
 			m_CurveInfluenceID = Shader.PropertyToID("_LengthInfluence");
-			m_CurveMatrixID = Shader.PropertyToID("_interpolateWorld");
 
 			/*	Update shaders.	*/
 			updateAllGlobal();
 
-			/*	Enable the curved variation.	*/
 			Shader.EnableKeyword("CURVED_ON");
 		}
 
-		private void OnDisable()
-		{
+		private void OnDisable(){
 			/*	Disable and reset to non curve.	*/
 			Shader.SetGlobalFloat(m_CurveStrengthID, 0.0f);
 			Shader.SetGlobalFloat(m_CurveHorizonID, 0.0f);
 			Shader.SetGlobalFloat(m_CurveFadeDistID, 0.0f);
 			Shader.SetGlobalVector(m_CurvedDirectionID, Vector4.zero);
 
-			/*	Disabled the curved variation.	*/
+			/*	Disable Curving.	*/
 			Shader.DisableKeyword("CURVED_ON");
-		}
-
-		public void GetCamera(Camera camera){
-			this.cam = camera;
-		}
-		public Camera GetCamera(){
-			return this.cam;
 		}
 
 		public void setStrength(float strength)
 		{
-			this.m_curveStrength = strength;
+			this.curveStrength = strength;
 			updateAllGlobal();
 		}
-
 		public float getStrength()
 		{
-			return this.m_curveStrength;
+			return this.curveStrength;
 		}
-
 		public void setDirection(Vector3 direction)
 		{
-			this.m_direction = direction;
+			this.direction = direction;
 			updateAllGlobal();
 		}
-		
 		public Vector3 getDirection()
 		{
-			return new Vector3(m_direction.x, m_direction.y, m_direction.z);
+			return new Vector3(direction.x, direction.y, direction.z);
 		}
 
 		public CurveSpace getSpace()
 		{
-			return this.m_curveSpace;
+			return this.curveSpace;
 		}
 		public void setSpace(CurveSpace space)
 		{
-			this.m_curveSpace = space;
+			this.curveSpace = space;
 			updateAllGlobal();
 		}
 
 		public float getHorizonDistance()
 		{
-			return this.m_curveHorizon;
+			return this.curveHorizon;
 		}
 		public void setHorizonDistance(float horizon)
 		{
-			this.m_curveHorizon = horizon;
+			this.curveHorizon = horizon;
 			updateAllGlobal();
 		}
 
 		public float getFadeHorizonDistance()
 		{
-			return this.m_curveHorizon;
+			return this.curveHorizon;
 		}
 		public void setFadeHorizonDistance(float fadeHorizon)
 		{
-			this.m_curveFadeDist = fadeHorizon;
-			updateAllGlobal();
-		}
-
-		public void setMatrixTransition(Matrix4x4[] mats){
-			this.m_matrices = mats;
-			updateAllGlobal();
-		}
-
-		public void setMatrixResolution(int samples){
-			this.m_matrices = new Matrix4x4[samples];
-		}
-
-		public void setMatrixTransition(Matrix4x4 matrix, int index){
-			this.m_matrices[index] = matrix;
+			this.curveFadeDist = fadeHorizon;
 			updateAllGlobal();
 		}
 		
 		private void updateAllGlobal()
 		{
-			Shader.SetGlobalFloat(m_CurveStrengthID, m_curveStrength * 0.001f);
-			Shader.SetGlobalFloat(m_CurveHorizonID, m_curveHorizon);
-			Shader.SetGlobalFloat(m_CurveFadeDistID, m_curveFadeDist);
-			switch (this.m_directionMethod)
-			{
-				case DirectionMethod.Camera:
-					Shader.SetGlobalVector(m_CurvedDirectionID, cam_dir);
-				 break;
-				default:
-					Shader.SetGlobalVector(m_CurvedDirectionID, m_direction);
-				break;
-			}
-
-			/*	Update only if enabled.	*/
-			if(this.m_distanceMethod == DistanceMethod.Curve)
-				Shader.SetGlobalMatrixArray(m_CurveMatrixID, this.m_matrices);
-
-			/*	*/
-			Shader.SetGlobalVector(m_CurveInfluenceID, m_influence);
-			Shader.SetGlobalInt(m_CurveModeID, (int)m_curveSpace);
+			Shader.SetGlobalFloat(m_CurveStrengthID, curveStrength * 0.001f);
+			Shader.SetGlobalFloat(m_CurveHorizonID, curveHorizon);
+			Shader.SetGlobalFloat(m_CurveFadeDistID, curveFadeDist);
+			Shader.SetGlobalVector(m_CurvedDirectionID, direction);
+			Shader.SetGlobalVector(m_CurveInfluenceID, influence);
+			Shader.SetGlobalInt(m_CurveModeID, (int)curveSpace);
 		}
 
-		[ExecuteInEditMode]
+
+# if UNITY_EDITOR
 		private void Update()
 		{
 			updateAllGlobal();
-			switch(this.m_directionMethod){
-				case DirectionMethod.Camera:
-					this.cam_dir = this.cam.transform.TransformDirection(m_direction).normalized;
-					break;
-				case DirectionMethod.Custom:
-					break;
-			}
-
-			for (int i = 0; i < 8; i++)
-			{
-				Quaternion rotation = Quaternion.Euler(0.0f, 0.0f, (float)Math.PI * 0.05f * i);
-				Matrix4x4 m = Matrix4x4.Rotate(rotation);
-				setMatrixTransition(m, i);
-			}
-
 		}
-#if UNITY_EDITOR
+
 		void OnValidate()
 		{
-			// this.m_influence.x = Mathf.Clamp(this.m_influence.x, 0, 1);
-			// this.m_influence.y = Mathf.Clamp(this.m_influence.y, 0, 1);
-			// this.m_influence.z = Mathf.Clamp(this.m_influence.z, 0, 1);
-			// this.m_influence.w = Mathf.Clamp(this.m_influence.w, 0, 1);
+			this.influence.x = Mathf.Clamp(this.influence.x, 0, 1);
+			this.influence.y = Mathf.Clamp(this.influence.y, 0, 1);
+			this.influence.z = Mathf.Clamp(this.influence.z, 0, 1);
+			this.influence.w = Mathf.Clamp(this.influence.w, 0, 1);
 
 
-			// this.m_direction.x = Mathf.Max(this.m_direction.x, 0);
-			// this.m_direction.y = Mathf.Max(this.m_direction.y, 0);
-			// this.m_direction.z = Mathf.Max(this.m_direction.z, 0);
-			//this.m_direction.w = Mathf.Max(this.m_direction.w, 0);
+			this.direction.x = Mathf.Max(this.direction.x, 0);
+			this.direction.y = Mathf.Max(this.direction.y, 0);
+			this.direction.z = Mathf.Max(this.direction.z, 0);
+			this.direction.w = Mathf.Max(this.direction.w, 0);
 		}
 #endif
 	}

@@ -1,16 +1,17 @@
 {
-    "name": "com.linuxsenpai.worldcurver",
-    "displayName": "World Curver",
-    "version": "0.1.1",
-    "unity": "2019.4",
-    "description": "Shader and Script for curving.",
-    "keywords": [
-        "World Curver",
-        "Shader"
-    ],
-    "author": {
-        "name": "Valdemar Lindberg",
-        "email": "voldiekami@gmail.com",
-        "url": ""
-    }
+  "name": "com.linuxsenpai.worldcurver",
+  "displayName": "World Curver",
+  "version": "0.1.1",
+  "unity": "2019.4",
+  "description": "Shader and Script for curving.",
+  "keywords": [
+    "World Curver",
+    "Shader"
+  ],
+  "author": {
+    "name": "Valdemar Lindberg",
+    "email": "voldiekami@gmail.com",
+    "url": ""
+  },
+  "type": "library"
 }

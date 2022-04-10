@@ -5,7 +5,7 @@ using UnityEditor;
 
 namespace WorldCurver
 {
-	[CustomEditor(typeof(WorldCurver))]
+	[CustomEditor(typeof(SekaiCurver))]
 	public class WorldCurveEditor : Editor
 	{
 		private SerializedProperty cam;
